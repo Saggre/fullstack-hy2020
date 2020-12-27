@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import ReactDOM from 'react-dom'
 
-const Display = ({value, text}) => <div>{text + ' ' + value}</div>
+const Statistic = ({value, text}) => <div>{text + ' ' + value}</div>
 
 const Button = (props) => (
     <button onClick={props.handleClick}>
@@ -22,14 +22,22 @@ const Statistics = ({good, neutral, bad}) => {
         return good / Math.max(getCount(), 1);
     };
 
+    if (getCount() === 0) {
+        return (
+            <>
+                <p>No feedback given</p>
+            </>
+        );
+    }
+
     return (
         <>
-            <Display value={good} text='good'/>
-            <Display value={neutral} text='neutral'/>
-            <Display value={bad} text='bad'/>
-            <Display value={getCount()} text='all'/>
-            <Display value={getAverage()} text='average'/>
-            <Display value={(getPositive() * 100) + ' %'} text='positive'/>
+            <Statistic value={good} text='good'/>
+            <Statistic value={neutral} text='neutral'/>
+            <Statistic value={bad} text='bad'/>
+            <Statistic value={getCount()} text='all'/>
+            <Statistic value={getAverage()} text='average'/>
+            <Statistic value={(getPositive() * 100) + ' %'} text='positive'/>
         </>
     );
 }
