@@ -21,7 +21,7 @@ const Content = (props) => {
     return (
         <>
             {props.course.parts.map((part, i) => {
-                return <Part name={part.name} exercises={part.exercises}/>
+                return <Part key={part.name} name={part.name} exercises={part.exercises}/>
             })}
         </>
     )
