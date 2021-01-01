@@ -4,6 +4,7 @@ import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
 
 const App = () => {
+    const weatherApiKey = process.env.REACT_APP_WEATHER_API_KEY;
     const [searchText, setSearchText] = useState('');
     const [countries, setCountries] = useState([]);
     const [queryCountries, setQueryCountries] = useState([]);
@@ -15,10 +16,45 @@ const App = () => {
         });
     }, []);
 
+    /**
+     * Gets a country object from memory where its name contains a string
+     * @param query
+     */
     const doCountryQuery = query => {
         setQueryCountries(countries.filter((country) => {
             return country.name.toLowerCase().includes(query);
         }));
+    };
+
+    /**
+     * Gets weather with a query and calls the callback function on success
+     * @param query
+     * @param onSuccess
+     */
+    const getCountryWeather = (query, onSuccess) => {
+        axios.get('http://api.weatherstack.com/forecast', {
+            params: {
+                access_key: weatherApiKey,
+                query: query
+            }
+        }).then(response => {
+            if (response.status !== 200 || 'error' in response.data) {
+                return;
+            }
+
+            onSuccess(response.data);
+        });
+    };
+
+    /**
+     * Handles country selection
+     * @param country
+     */
+    const handleCountrySelection = country => {
+        setSelectedCountry({...country});
+        getCountryWeather(country.capital, (weather) => {
+            setSelectedCountry({...country, weather: weather});
+        });
     };
 
     return (
@@ -30,9 +66,7 @@ const App = () => {
             }}/>
             <SearchResults countries={queryCountries}
                            selectedCountry={selectedCountry}
-                           onCountrySelected={(country) => {
-                               setSelectedCountry(country);
-                           }}/>
+                           onCountrySelected={country => handleCountrySelection(country)}/>
         </>
     );
 };

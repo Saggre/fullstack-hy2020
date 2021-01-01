@@ -21,14 +21,13 @@ const SearchResults = ({countries, selectedCountry, onCountrySelected}) => {
         <>
             {countries.map((country) => {
                 return (
-                    <>
-                        <SearchResult key={country.alpha3Code}
-                                      country={country}
+                    <div key={country.alpha3Code}>
+                        <SearchResult country={country}
                                       onClick={() => onCountrySelected(country)}/>
-                        {selectedCountry.alpha3Code === country.alpha3Code &&
-                        <Country country={country}/>
+                        {selectedCountry != null && selectedCountry.alpha3Code === country.alpha3Code &&
+                        <Country country={selectedCountry}/>
                         }
-                    </>
+                    </div>
                 );
             })}
         </>

@@ -2,8 +2,9 @@
 See more info about the course [Here](https://fullstackopen.com)
 
 ## Running the solutions
+Set variables in exercise root folder's .env when necessary
 ```
 $ cd exercise-directory
-$ yarn install
-$ yarn start
+$ npm i
+$ npm start
 ```
