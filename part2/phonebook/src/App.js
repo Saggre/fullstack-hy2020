@@ -28,9 +28,16 @@ const App = () => {
             return;
         }
 
-        if (persons.some(p => p.equals(person))) {
-            alert(`${person.name} is already added to phonebook`);
-            return;
+        for (let i = 0; i < persons.length; i++) {
+            if (person.equals(persons[i])) {
+                person.id = persons[i].id;
+
+                if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
+                    handleUpdateRecord(person);
+                }
+
+                return;
+            }
         }
 
         recordsService.create(person).then(response => {
@@ -48,9 +55,22 @@ const App = () => {
             return;
         }
 
-        recordsService.remove(person).then((response) => {
+        recordsService.remove(person).then(response => {
             if (response.status === 200) {
                 setPersons(persons.filter(p => !p.equals(person)));
+            }
+        });
+    };
+
+    /**
+     * Handle updating a person record
+     * @param {Person} person
+     */
+    const handleUpdateRecord = person => {
+        recordsService.update(person).then(response => {
+            if (response.status === 200) {
+                setPersons(persons.map(p => p.id === person.id ? person : p));
+                resetPerson();
             }
         });
     };
