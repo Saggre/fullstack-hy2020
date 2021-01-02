@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 import Person from './models/Person';
 import recordsService from './services/records';
 
@@ -9,6 +10,8 @@ const App = () => {
     const [persons, setPersons] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [newPerson, setNewPerson] = useState(new Person());
+    const [message, setMessage] = useState(null);
+    const messageTime = 3000;
 
     useEffect(() => {
         recordsService.getAll().then(response => setPersons(response));
@@ -43,6 +46,15 @@ const App = () => {
         recordsService.create(person).then(response => {
             setPersons([...persons, Person.from(response.data)]);
             resetPerson();
+            setMessage({type: 'success', text: `Added ${person.name}`});
+            setTimeout(() => {
+                setMessage(null);
+            }, messageTime);
+        }).catch(() => {
+            setMessage({type: 'error', text: `An error occurred`});
+            setTimeout(() => {
+                setMessage(null);
+            }, messageTime);
         });
     };
 
@@ -56,9 +68,17 @@ const App = () => {
         }
 
         recordsService.remove(person).then(response => {
-            if (response.status === 200) {
-                setPersons(persons.filter(p => !p.equals(person)));
-            }
+            setPersons(persons.filter(p => !p.equals(person)));
+            setMessage({type: 'success', text: `Removed ${person.name}`});
+            setTimeout(() => {
+                setMessage(null);
+            }, messageTime);
+        }).catch(() => {
+            setMessage({type: 'error', text: `${person.name} was already removed from the server`});
+            setTimeout(() => {
+                setMessage(null);
+            }, messageTime);
+            setPersons(persons.filter(p => p.id !== person.id));
         });
     };
 
@@ -67,17 +87,26 @@ const App = () => {
      * @param {Person} person
      */
     const handleUpdateRecord = person => {
-        recordsService.update(person).then(response => {
-            if (response.status === 200) {
-                setPersons(persons.map(p => p.id === person.id ? person : p));
-                resetPerson();
-            }
+        recordsService.update(person).then(() => {
+            setPersons(persons.map(p => p.id === person.id ? person : p));
+            resetPerson();
+            setMessage({type: 'success', text: `Updated ${person.name}`});
+            setTimeout(() => {
+                setMessage(null);
+            }, messageTime);
+        }).catch(() => {
+            setMessage({type: 'error', text: `Information of ${person.name} has already been removed from the server`});
+            setTimeout(() => {
+                setMessage(null);
+            }, messageTime);
+            setPersons(persons.filter(p => p.id !== person.id));
         });
     };
 
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message}/>
             <Filter text={searchText} onChange={event => {
                 setSearchText(event.target.value);
             }}/>
