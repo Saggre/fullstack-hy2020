@@ -1,8 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-const Person = ({person}) => {
+const Person = ({person, onDelete}) => {
     return (
-        <li>{person.name} {person.number}</li>
+        <>
+            <li>
+                {person.name} {person.number}&nbsp;
+                <button onClick={onDelete}>delete</button>
+            </li>
+        </>
     );
 };
 

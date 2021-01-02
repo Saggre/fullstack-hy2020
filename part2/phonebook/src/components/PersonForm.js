@@ -1,11 +1,12 @@
-import React from 'react'
+import React from 'react';
+import Person from '../models/Person';
 
 const PersonForm = ({onSubmit, onChange, person}) => {
-    const handleInputChange = (event) => {
-        const newPerson = {...person};
+    const handleInputChange = event => {
+        const newPerson = Person.from(person);
         newPerson[event.target.name] = event.target.value;
         onChange(newPerson);
-    }
+    };
 
     return (
         <form onSubmit={onSubmit}>
