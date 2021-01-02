@@ -1,7 +1,7 @@
 # University of Helsinki's Full Stack course exercises
 See more info about the course [Here](https://fullstackopen.com)
 
-## Running the solutions'
+## Running the solutions
 1. `cd exercise-dir`
 2. Set variables .env if necessary
 3. `npm i`
