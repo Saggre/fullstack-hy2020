@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Person from '../models/Person';
 
-const baseUrl = 'http://localhost:3001/persons';
+const baseUrl = '/api/persons';
 
 /**
  *
